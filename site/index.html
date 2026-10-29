@@ -2007,7 +2007,7 @@ function showLandlord(code,dot){
   const sc=posOf(x), scn=sc==null?null:Math.round(sc*100);
   open(esc(x.name),
     `${here}${isLA?'A council, landlord for its own homes':'Housing association'} · ${x.homes?fmtInt(x.homes)+' social-rent homes in England':x.size}${x.la_count>1?` across ${x.la_count} boroughs`:''}
-     <div class="hsc">${scn!=null?pill(scn+'/100',scoreBand(scn)):pill('Not ranked')}<small>${scn!=null?`Its position across the four measures below, better than ${scn}% of landlords`:'Not enough of the four measures below are published to place this landlord'}</small></div>`,
+     <div class="hsc">${scn!=null?pill(scn+'/100',scoreBand(scn)):pill('Not ranked')}<small>${scn!=null?`Better than ${scn}% of landlords`:'Not enough of the four measures below are published to place this landlord'}</small></div>`,
    `<div class="sec summary"><p>${summaryOf(x,bands,isLA)}</p></div>
     ${four}
     ${costSection(x,isLA,betterThan(DIST.non_emergency_repairs_on_time_pct,x.m.non_emergency_repairs_on_time_pct,true))}
