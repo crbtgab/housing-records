@@ -1740,7 +1740,7 @@ function showHome(){
       <div class="k-good"><div class="l">Homes whose landlord has no serious weaknesses</div><div class="n">${fmtM(homesBy.good)}</div></div>
       <div class="k-bad"><div class="l">Homes whose landlord has 1+ serious weakness</div><div class="n">${fmtM(homesBy.poor+homesBy.bad)}</div></div>
       <div><div class="l">Share of England’s social homes on this map</div><div class="n">${fmt(homesAll/laTotal*100)}<u>%</u></div></div>
-      <div class="k-${netAdd>0?'good':netAdd<0?'bad':'none'}"><div class="l">Social homes added in ${D.meta.tsm_year}</div><div class="n">${netAdd>=0?'+':'−'}${fmtInt(Math.abs(netAdd))}</div></div>
+      <div class="k-${netAdd>0?'good':netAdd<0?'bad':'none'}"><div class="l">Social homes added in ${D.meta.sdr_year||D.meta.tsm_year}</div><div class="n">${netAdd>=0?'+':'−'}${fmtInt(Math.abs(netAdd))}</div></div>
     </div></div>
     <div class="sec"><h3><span>Landlord Ranking</span></h3>
       <p class="src" style="margin:0 0 var(--s4)">A landlord’s score is its average position across four measures: safety checks, homes below the decent standard, non-emergency repairs on time, and Ombudsman findings. The score is relative to the performances of other landlords in the same measures. Equal weight, no adjustment, and only landlords of 1,000 homes or more that publish all four are ranked.</p>
@@ -1900,7 +1900,7 @@ function showLA(code,keepView){
     <div class="sec"><h3><span>Landlords With Homes Here</span> <small>${la.n_landlords} in total, largest first</small></h3>
       <ul class="llist">${all.map(row).join('')}</ul></div>
 
-    <div class="sec"><p class="src">Homes by area: RSH Statistical Data Return ${D.meta.tsm_year} for housing associations, MHCLG Local Authority Housing Statistics ${D.meta.tsm_year} for the council. Borough figures average landlord figures weighted by homes here.</p></div>`,
+    <div class="sec"><p class="src">Homes by area: RSH Statistical Data Return ${D.meta.sdr_year||D.meta.tsm_year} for housing associations, MHCLG Local Authority Housing Statistics ${D.meta.sdr_year||D.meta.tsm_year} for the council. Borough figures average landlord figures weighted by homes here.</p></div>`,
    false,['area','Borough',laBandOf(code)]);
 }
 
@@ -2053,6 +2053,7 @@ function showSmall(code){
   // Two different reasons a landlord is here, and they must not be confused. Most are below the Regulator's
   // 1,000-home reporting threshold. A couple filed last year and not this one: those are absent, not small.
   const absent=!!x.prev_band;
+  const onMap=Object.values(LAS).some(la=>(la.landlords||[]).some(h=>h.code===code));   // homes still in the stock-by-borough return
   const C=x.lahs||null;                       // a council that files LAHS has a full record of its own
   const ORD={compensation:'Compensation',apology:'An apology','take-specific-action-non-repair':'Specific action','policy-review':'A policy review',repairs:'Repairs','staff-training':'Staff training','case-review':'A case review','process-change':'A process change',other:'Other action'};
   const rate=ho.ho_maladministration_rate_all;
@@ -2063,10 +2064,10 @@ function showSmall(code){
       <p class="lede">The Ombudsman has published <b>${fmtInt(n)}</b> decision${n===1?'':'s'} about this landlord${ho.ho_severe_all?`, <b>${ho.ho_severe_all}</b> of them severe maladministration`:''}. ${C?'Its own council return is published too; the Regulator\'s measures are not.':`Nothing else about it is published${absent?' in this year\'s returns':', because of its size'}.`}</p>
       ${C?`<p class="src">This council files the Local Authority Housing Statistics return, so its own figures on stock, rent collection, arrears, empty homes and capital works are published and shown below. What is missing is the Regulator's side: the Tenant Satisfaction Measures, tenant survey results and regulatory grades.</p>`:''}
       <p class="src">${C?'':absent
-        ? `This landlord reported the Tenant Satisfaction Measures for ${D.meta.tsm_prev}, with ${esc(x.prev_band)} homes, but does not appear in the Regulator's ${D.meta.tsm_year} returns. So there is no current safety, condition, repair, rent or cost figure for it — not because it has a clean record, but because this year's returns do not include it.`
+        ? `This landlord reported the Tenant Satisfaction Measures for ${D.meta.tsm_prev}, with ${esc(x.prev_band)} homes, but does not appear in the Regulator's ${D.meta.tsm_year} returns, and the Regulator does not say why. So there are no current safety, condition, repair or tenant survey figures for it — not because it has a clean record, but because this year's returns do not include it.`
         : `Landlords with fewer than 1,000 social homes do not have to file the Tenant Satisfaction Measures, the Statistical Data Return or Value for Money metrics, and the Regulator does not routinely inspect them. So there are no safety, condition, repair, rent or cost figures for this landlord anywhere — not because it has a clean record, but because nobody collects them at this size.`}
         ${C?'':n<10?'With so few decisions, treat the count below as a description of those cases and nothing more: it is not a measure of the service.':''}</p>
-      <p class="src">It has no dot on the map because the stock-by-borough return that places the dots is filed by landlords in the Regulator's current returns only.</p>
+      ${onMap?'':`<p class="src">It has no dot on the map because the stock-by-borough return that places the dots is filed by landlords in the Regulator's current returns only.</p>`}
     </div>
     ${g?`<details open><summary><svg class="ic ic-s" aria-hidden="true"><use href="#i-badge"/></svg>The Regulator's Judgement<span class="pills">${[g.C,g.G,g.V].filter(Boolean).map(v=>pill(v,GRADE_LV[v.replace('*','')])).join('')}</span></summary><div class="sec">
       ${g.C?gradeRow(g.C,'C',g.C_date,isLA,null,true,false):''}${g.G?gradeRow(g.G,'G',g.G_date,isLA,null,true,true):''}${g.V?gradeRow(g.V,'V',g.V_date,isLA,null,true,true):''}
