@@ -36,13 +36,13 @@ These are not style preferences. Breaking any of them is a bug, however good the
 
 | | |
 |---|---|
-| Landlords | **360** — 200 housing associations, 160 councils |
+| Landlords | **356** — 196 housing associations, 160 councils (Tenant Satisfaction Measures 2025/26) |
 | Threshold | 1,000+ social homes in England, reporting to the Regulator |
-| Homes covered | ~4.04m, about **95%** of England's social homes |
+| Homes covered | ~4.08m, about **96%** of the 4.27m social homes on the map |
 | Boroughs | 296 English districts (361 drawn, incl. greyed Scotland/Wales/NI) |
 | Map dots | 8,434 landlord holdings |
 | Ombudsman decisions | **18,123**, Dec 2020 – Aug 2026 |
-| Ombudsman-only landlords | **96** — have decisions but file none of the Regulator's returns |
+| Ombudsman-only landlords | **97** — have decisions but none of this year's Regulator returns; 3 of them filed the 2024/25 Tenant Satisfaction Measures but are not in 2025/26 |
 | Not on the record | Of 1,578 registered providers, 1,219 own under 1,000 homes; 26 councils own none |
 
 ---
@@ -58,8 +58,8 @@ updated** — if one 404s, open the landing page and take the current link, then
 | File | Landing page | Taken | Cadence |
 |---|---|---|---|
 | `List_of_registered_providers_*.xlsx` | [Registered providers of social housing](https://www.gov.uk/government/publications/registered-providers-of-social-housing) | The canonical register — name, registration number, designation (profit/non-profit/LA), legal form, registration date. Everything joins on this. | Monthly |
-| `2025_TSM_Full_Data_*.xlsx` | [Tenant Satisfaction Measures 2024/25](https://www.gov.uk/government/statistics/tenant-satisfaction-measures-202425) | 22 measures: 12 tenant-perception, 10 management-information (safety checks, non-decent homes, repairs, complaints, ASB). | Annual, Nov |
-| `2024_TSM_Full_Data_*.xlsx` | [Data release TSM 2024](https://www.gov.uk/government/statistics/data-release-tsm-2024) | Same measures for 2023/24, for year-on-year change. | — |
+| `2026_TSM_Full_Dataset_*.xlsx` | [Tenant Satisfaction Measures 2025/26](https://www.gov.uk/government/statistics/tenant-satisfaction-measures-202526) | 22 measures: 12 tenant-perception, 10 management-information (safety checks, non-decent homes, repairs, complaints, ASB). Published 5 November 2026. | Annual, Nov |
+| `2025_TSM_Full_Data_*.xlsx` | [Tenant Satisfaction Measures 2024/25](https://www.gov.uk/government/statistics/tenant-satisfaction-measures-202425) | Same measures for 2024/25, for year-on-year change. | — |
 | `PRP_Data_Release_2025_Full_Data_*.zip` (SDR) | [PRP stock and rents 2024/25](https://www.gov.uk/government/statistics/private-registered-provider-social-housing-stock-and-rents-in-england-2024-to-2025) | File 02 group structure; File 04 stock by local authority; Files 09/10 average weekly net rent and units; File 16 stock balance sheet. | Annual, Oct |
 | `*_RegulatoryJudgementsNotices_Published.xlsx` | [Regulatory judgements and enforcement notices](https://www.gov.uk/government/publications/regulatory-judgements-and-enforcement-notices) | C1–C4 / G1–G4 / V1–V4 grades with dates, what moved at the latest judgement, engagement route, "Grading Under Review", enforcement notices. | Monthly+ |
 | `*_VFM_Metrics_tables.xlsx` | [Value for money metrics 2025](https://www.gov.uk/government/publications/value-for-money-metrics-and-reporting-2025) | Tables 10/18/19: Headline Social Housing Cost per unit by segment. Table 9 for the England median. | Annual, Mar |
@@ -128,7 +128,17 @@ Outputs land in `data/out/` as CSVs — inspect those when something looks wrong
 return and withholds the other, saying why in `TSM25_Man_Info_Not_Inc` and `TSM25_Perception_Not_Inc`.
 Building from the management sheet alone silently drops those landlords entirely. Take the union of both,
 and carry the Regulator's reason through to the card.
-*Currently: Tandridge DC (management info withheld), Cannock Chase and Stoke on Trent (perception withheld).*
+*Currently: none. The 2025/26 release withholds nothing, so it has no "Not Inc" sheets; the code expects that.*
+
+**Landlords leave the returns between years.** Six landlords in the 2024/25 TSMs are not in 2025/26. Three
+belonged to groups in the 2024/25 SDR group structure (Flagship to Bromford Flagship, Octavia to Abri, Origin to
+Places for People), so their stock, rents and Ombudsman history roll up to that parent, which files the TSMs.
+The other three (Estuary, Settle, Tower Hamlets Community Housing) are still registered and the Regulator gives
+no reason; they get an Ombudsman-only card that says they filed last year and not this year.
+
+**Landlords rename.** Chelmer Housing Partnership became Delta Housing; Bolton at Home became Be One Homes.
+Matching by name (Ombudsman decisions, Value for Money tables) uses every name a code has carried in the TSM
+returns, so a rename does not drop its history.
 
 **Where data is withheld, the summary must not read a clean bill of health out of the gap.** "Not in the
 worst 25% on any of the four measures" is false when three of them were withheld.
@@ -290,9 +300,10 @@ is right there but no tool returns it.
 
 Re-verified against source files. Useful for press, and worth re-checking each update.
 
-- **Statutory safety checks short of 100%** — 62 instances below 90% across the record, where the standard is
-  100% in every case. Adur legionella 0%; Castle Point asbestos 0%; Winchester asbestos 0% and fire risk
-  21.9%; Sandwell asbestos 34.1% (27,717 homes); North Tyneside lifts 41.6% (13,942 homes).
+- **Statutory safety checks short of 100%** (2025/26) — 51 instances below 90% across the record (62 in
+  2024/25), where the standard is 100% in every case. Oadby and Wigston legionella and lifts 0%; Brent
+  asbestos 3.1% and legionella 46.1% (9,607 homes); Gosport legionella 11.2%; Gateway Housing Association
+  legionella 20.6%.
 - **Decent Homes figures resting on almost no inspection** — 23 councils covering 270,910 homes report a
   non-decency figure having inspected under a quarter of their stock in five years; 3 published a figure
   having inspected none. **Pitch as a standard measured unevenly, never as concealment** — councils
