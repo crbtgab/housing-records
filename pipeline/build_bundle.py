@@ -40,6 +40,9 @@ HO = ["ho_cases_all", "ho_maladministration_all", "ho_severe_all", "ho_maladmini
       "ho_compensation_orders_all", "ho_compensation_sum_all", "ho_compensation_known_all", "ho_cases_12m", "ho_maladministration_12m", "ho_severe_12m", "ho_maladministration_rate_12m", "ho_repairs_cases_12m",
       "ho_health_safety_cases_12m", "ho_cases_per_10k_all", "ho_maladministration_per_10k_all", "ho_cases_per_10k_12m", "ho_maladministration_per_10k_12m"]
 
+TSM_YEAR, TSM_PREV = "2025/26", "2024/25"   # the Tenant Satisfaction Measures shown, and the year they are compared with
+
+
 def clean(v):
     if v is None or (isinstance(v, float) and np.isnan(v)):
         return None
@@ -49,7 +52,7 @@ def clean(v):
         return round(float(v), 1)
     return v
 
-prev = tsm[tsm.tsm_year == "2023/24"].set_index("landlord_code")
+prev = tsm[tsm.tsm_year == TSM_PREV].set_index("landlord_code")
 landlords = {}
 for _, r in s.iterrows():
     code = r.landlord_code
@@ -118,7 +121,7 @@ cut = cases.ym.max() - pd.DateOffset(months=12)
 # is no requirement to file them). They get a card of their own and no map dot: where their homes are is not published.
 small_codes = sorted(set(ho_by.index) - set(map(str, landlords)))
 small, smallcases = {}, {}
-prev_band = dict(zip(tsm[tsm.tsm_year == "2023/24"].landlord_code.astype(str), tsm[tsm.tsm_year == "2023/24"].homes_owned))
+prev_band = dict(zip(tsm[tsm.tsm_year == TSM_PREV].landlord_code.astype(str), tsm[tsm.tsm_year == TSM_PREV].homes_owned))
 rjl = rjall.sort_values("Publication Date").drop_duplicates("Reg Code", keep="last").set_index("Reg Code")
 def nd(v):
     return None if not isinstance(v, str) or v.strip() in ("-", "") else v.strip()
@@ -135,8 +138,8 @@ for c in small_codes:
         e["grades"] = {"C": nd(j["Consumer grade"]), "G": nd(j["Governance Grade"]), "V": nd(j["Viability Grade"]),
                        "C_date": (nd(j["Consumer Grade Date"]) or "")[:10] or None, "G_date": (nd(j["Governance Date"]) or "")[:10] or None,
                        "V_date": (nd(j["Viability Grade Date"]) or "")[:10] or None}
-        if c in prev_band:
-            e["prev_band"] = prev_band[c]
+    if c in prev_band:   # filed the previous year's returns but not this year's: absent, not small
+        e["prev_band"] = prev_band[c]
     if c in orders:
         e["orders"] = orders[c]
     small[c] = e
@@ -240,7 +243,7 @@ nodata = {c: names[c] for c in paths if c not in la_out}
 orphans = sorted(set(la_out) - set(paths))
 assert not orphans, f"local authority codes with no ONS boundary (add an alias in build_layers.py): {orphans}"
 
-bundle = {"meta": {"built": "2026-09-10", "tsm_year": "2024/25", "tsm_prev": "2023/24", "n_landlords": len(landlords), "ho_cases": int(len(cases)),
+bundle = {"meta": {"built": "2026-11-10", "tsm_year": TSM_YEAR, "tsm_prev": TSM_PREV, "sdr_year": "2024/25", "n_landlords": len(landlords), "ho_cases": int(len(cases)),
                    "ho_window_from": str(cut.date())[:7], "ho_latest_month": str(cases.ym.max().date())[:7], "grades_date": "2026-09-09"},
           "vfm_meta": {"year": "2024/25", "published": "2026-03-06",
                        "segments": {k: {"label": row.label, "median": clean(row["median"]), "n": int(row.n),

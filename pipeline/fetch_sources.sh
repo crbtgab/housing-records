@@ -8,8 +8,8 @@ get () { echo "→ $2"; curl -fsSL --retry 3 -o "$2" "$1"; }
 
 A=https://assets.publishing.service.gov.uk/media
 get $A/6a842f1e54bcee010d5144aa/List_of_registered_providers_17_August_2026.xlsx rsh/List_of_registered_providers_17_August_2026.xlsx
+get $A/6adb5f65b62d80a107bc5c5d/2026_TSM_Full_Dataset_FINAL.xlsx                rsh/2026_TSM_Full_Dataset_FINAL.xlsx
 get $A/69394723e447374889cd9005/2025_TSM_Full_Data_v1.1_FINAL.xlsx               rsh/2025_TSM_Full_Data_v1.1_FINAL.xlsx
-get $A/69394574e447374889cd9004/2024_TSM_Full_Data_v2.1_FINAL.xlsx               rsh/2024_TSM_Full_Data_v2.1_FINAL.xlsx
 get $A/69049e3a823bdda9488b24f3/PRP_Data_Release_2025_Full_Data_FINAL_V1.1.zip   rsh/PRP_Data_Release_2025_Full_Data_FINAL_V1.1.zip
 get $A/68f8a6560794bb80118bb71f/GEO_PRP_TOOL_2025_FINAL_V1.0.xlsx                rsh/GEO_PRP_TOOL_2025_FINAL_V1.0.xlsx
 get $A/6a9a92545a0c25165ae468f8/20260909_RegulatoryJudgementsNotices_Published.xlsx rsh/20260909_RegulatoryJudgementsNotices_Published.xlsx

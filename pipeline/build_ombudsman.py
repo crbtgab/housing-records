@@ -57,9 +57,14 @@ def norm(s):
     s = re.sub(r"[^a-z0-9 ]", " ", s)
     return " ".join(s.split())
 
+# Landlords rename (Chelmer Housing Partnership became Delta Housing, Bolton at Home became Be One Homes), and
+# the Ombudsman keeps the name in use at the time of each decision, so every name a code has carried in the
+# TSM returns is kept, not just the latest one.
+tsm_names = pd.read_csv(OUT + "tsm_landlords.csv", dtype={"landlord_code": str})[["landlord_code", "landlord_name"]]
 names = pd.concat([
     prov[["reg_number", "org_name"]].rename(columns={"reg_number": "code", "org_name": "name"}),
     spine[["landlord_code", "landlord_name"]].rename(columns={"landlord_code": "code", "landlord_name": "name"}),
+    tsm_names[tsm_names.landlord_code.isin(set(spine.landlord_code.astype(str)))].rename(columns={"landlord_code": "code", "landlord_name": "name"}),
 ]).drop_duplicates()
 names["k"] = names.name.map(norm)
 exact = dict(zip(names.name.str.lower().str.strip(), names.code))
