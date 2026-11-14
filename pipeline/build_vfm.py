@@ -71,6 +71,10 @@ for seg, g in vfm.groupby("seg"):
 # Match to the spine by name. Exact registered name first; a normalised form second; never a guess.
 spine = pd.read_csv(OUT + "landlord_spine_2024_25.csv")[["landlord_code", "landlord_name", "landlord_type"]]
 prp = spine[spine.landlord_type == "PRP"]
+# the cost tables carry the name a landlord had that year: keep every name its code has carried in the TSM returns
+tsm_names = pd.read_csv(OUT + "tsm_landlords.csv", dtype={"landlord_code": str})[["landlord_code", "landlord_name"]]
+tsm_names = tsm_names[tsm_names.landlord_code.isin(set(prp.landlord_code.astype(str)))]
+prp = pd.concat([prp, tsm_names.assign(landlord_type="PRP")]).drop_duplicates(["landlord_code", "landlord_name"])
 
 def norm(s):
     s = re.sub(r"[^a-z0-9 ]", " ", str(s).lower())

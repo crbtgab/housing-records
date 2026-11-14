@@ -46,7 +46,7 @@ landlord_code,landlord_name,la_code,la_name,la_owned_homes
 00CR,Dudley Metropolitan Borough Council,E08000027,Dudley,20780
 00CS,Sandwell Metropolitan Borough Council,E08000028,Sandwell,27717
 00CT,Solihull Metropolitan Borough Council,E08000029,Solihull,9978
-00CW,Wolverhampton City Council,E08000031,Wolverhampton,21302
+00CW,City of Wolverhampton Council,E08000031,Wolverhampton,21302
 00CZ,Kirklees Metropolitan Borough Council,E08000034,Kirklees,21599
 00DA,Leeds City Council,E08000035,Leeds,52646
 00EH,Darlington Borough Council,E06000005,Darlington,5262
@@ -73,7 +73,7 @@ landlord_code,landlord_name,la_code,la_name,la_owned_homes
 00MC,Reading Borough Council,E06000038,Reading,6944
 00MD,Slough Borough Council,E06000039,Slough,6183
 00MF,Wokingham Borough Council,E06000041,Wokingham,2568
-00MG,Milton Keynes Council,E06000042,Milton Keynes,12461
+00MG,Milton Keynes City Council,E06000042,Milton Keynes,12461
 00ML,Brighton and Hove City Council,E06000043,Brighton and Hove,11919
 00MR,Portsmouth City Council,E06000044,Portsmouth,10474
 00MS,Southampton City Council,E06000045,Southampton,16196

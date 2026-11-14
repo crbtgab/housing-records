@@ -1,6 +1,6 @@
-"""Build the landlord spine: RSH register + TSM 2023/24 & 2024/25 + SDR stock by local authority.
+"""Build the landlord spine: RSH register + TSM 2024/25 & 2025/26 + SDR stock by local authority.
 
-Inputs  (raw/):  List_of_registered_providers_*.xlsx, 2025_TSM_Full_Data_*.xlsx, 2024_TSM_Full_Data_*.xlsx,
+Inputs  (raw/):  List_of_registered_providers_*.xlsx, 2026_TSM_Full_Dataset_*.xlsx, 2025_TSM_Full_Data_*.xlsx,
                  SDR_Data_Release_2025 ... File 04 - Stock by LA.csv (from the SDR full-data zip)
 Outputs (out/):  registered_providers.csv, tsm_landlords.csv (both years, long),
                  stock_by_la.csv (provider x local authority), landlord_spine_2024_25.csv (one row per landlord, with ranks)
@@ -95,8 +95,8 @@ def main():
     prov.to_csv(OUT + "registered_providers.csv", index=False)
 
     tsm = pd.concat([
+        build_tsm("2025/26", glob.glob(RAW + "rsh/2026_TSM_Full_Dataset*.xlsx")[0], "TSM26_Management_Info", "TSM26_LCRA_Perception"),
         build_tsm("2024/25", glob.glob(RAW + "rsh/2025_TSM_Full_Data*.xlsx")[0], "TSM25_Management_Info", "TSM25_LCRA_Perception"),
-        build_tsm("2023/24", glob.glob(RAW + "rsh/2024_TSM_Full_Data*.xlsx")[0], "TSM24_Management_Info", "TSM24_LCRA_Perception"),
     ], ignore_index=True)
     tsm.to_csv(OUT + "tsm_landlords.csv", index=False)
 
@@ -111,7 +111,7 @@ def main():
     sla = sla[["landlord_name", "landlord_code", "size", "la_name", "la_code", "lcra_owned", "dhs_fails"]]
     sla.to_csv(OUT + "stock_by_la.csv", index=False)
 
-    t = tsm[tsm.tsm_year == "2024/25"].copy()
+    t = tsm[tsm.tsm_year == "2025/26"].copy()
     lower_is_worse = [c for c in t.columns if c.endswith("_pct") and c != "non_decent_pct"] + list(TP.values())
     higher_is_worse = ["non_decent_pct", "stage1_complaints_per_1000", "stage2_complaints_per_1000", "asb_cases_per_1000"]
     for c in lower_is_worse:

@@ -28,8 +28,8 @@ changing anything that touches a figure.
 
 | | |
 |---|---|
-| 360 | landlords with 1,000+ social homes in England — 200 housing associations and 160 councils — each with up to 22 Tenant Satisfaction Measures for two years |
-| 96 | smaller landlords with Ombudsman decisions but no Regulator returns, shown with whatever is published |
+| 356 | landlords with 1,000+ social homes in England — 196 housing associations and 160 councils — each with up to 22 Tenant Satisfaction Measures for 2025/26, compared with 2024/25 |
+| 97 | landlords with Ombudsman decisions but none of this year's Regulator returns (most are under 1,000 homes), shown with whatever is published |
 | 18,123 | Housing Ombudsman decisions, December 2020 to August 2026, tagged by outcome, category and order |
 | 289 | landlords with a published regulatory grade |
 | 296 | English districts, with council and housing-association homes (all 361 UK districts are drawn) |

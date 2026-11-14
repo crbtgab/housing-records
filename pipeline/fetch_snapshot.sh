@@ -3,9 +3,9 @@
 # into data/raw. Use this to check or reproduce the published figures. (Publishers replace and remove
 # old files, e.g. the monthly register, so pipeline/fetch_sources.sh gets the CURRENT files instead.)
 #
-# Usage: bash pipeline/fetch_snapshot.sh [tag]        default tag: raw-2026-09
+# Usage: bash pipeline/fetch_snapshot.sh [tag]        default tag: raw-2026-11
 set -euo pipefail
-TAG="${1:-raw-2026-09}"
+TAG="${1:-raw-2026-11}"
 REPO="crbtgab/housing-records"
 cd "$(dirname "$0")/../data/raw"
 FILE="$TAG.tar.gz"
