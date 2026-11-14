@@ -2,6 +2,7 @@
 landlord lists), landlord profiles (two TSM years, ranks, grades, Ombudsman record), recent cases, quartiles, geometry."""
 import glob
 import json
+from decimal import Decimal, ROUND_HALF_UP
 
 import numpy as np
 import pandas as pd
@@ -49,7 +50,10 @@ def clean(v):
     if isinstance(v, (np.integer,)):
         return int(v)
     if isinstance(v, (np.floating, float)):
-        return round(float(v), 1)
+        # Exact halves round up (3.35 -> 3.4, 5.05 -> 5.1), as a person checking by hand would. The value is
+        # settled to 9 places first, so the result does not depend on tiny floating-point differences between
+        # pandas versions (a median of 3.3 and 3.4 can come out as 3.3499999999999996 or 3.3500000000000001).
+        return float(Decimal(repr(round(float(v), 9))).quantize(Decimal("0.1"), ROUND_HALF_UP))
     return v
 
 prev = tsm[tsm.tsm_year == TSM_PREV].set_index("landlord_code")
